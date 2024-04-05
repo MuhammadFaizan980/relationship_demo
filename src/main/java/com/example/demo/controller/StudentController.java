@@ -85,4 +85,10 @@ public class StudentController {
             return new ApiErrorResponse<>(false, e.getMessage());
         }
     }
+
+    @DeleteMapping("/students/{student_id}")
+    public boolean delete(@PathVariable("student_id") int studentId) {
+        iStudentRepository.deleteById(studentId);
+        return true;
+    }
 }

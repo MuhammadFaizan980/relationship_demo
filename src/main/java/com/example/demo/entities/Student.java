@@ -19,7 +19,7 @@ public class Student {
     @JoinColumn(name = "school_id")
     private School school;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "annual_report_id")
     private AnnualReport annualReport;
 

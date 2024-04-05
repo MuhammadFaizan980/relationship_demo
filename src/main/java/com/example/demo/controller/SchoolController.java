@@ -8,10 +8,7 @@ import com.example.demo.dtos.school.SchoolResponse;
 import com.example.demo.entities.School;
 import com.example.demo.repositories.ISchoolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -45,5 +42,11 @@ public class SchoolController {
         } catch (Exception e) {
             return new ApiErrorResponse<>(false, e.getMessage());
         }
+    }
+
+    @DeleteMapping("/schools/{school_id}")
+    public boolean delete(@PathVariable("school_id") int schoolId) {
+        iSchoolRepository.deleteById(schoolId);
+        return true;
     }
 }
