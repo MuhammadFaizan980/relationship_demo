@@ -6,6 +6,7 @@ import com.example.demo.dtos.student.StudentInfo;
 import com.example.demo.dtos.student.StudentRequest;
 import com.example.demo.dtos.student.StudentResponse;
 import com.example.demo.entities.AnnualReport;
+import com.example.demo.entities.Course;
 import com.example.demo.entities.School;
 import com.example.demo.entities.Student;
 import com.example.demo.repositories.IAnnualReportRepository;
@@ -32,26 +33,26 @@ public class StudentController {
             Student student = iStudentRepository.save(studentRequest.toStudent());
             School school = iSchoolRepository.findById(student.getSchool().getId()).get();
             AnnualReport annualReport = student.getAnnualReport();
-            StudentInfo studentInfo = new StudentInfo(student.getId(), student.getFirstName() + " " + student.getLastName(), school.getId(), school.getSchoolAddress(), null, null);
+            StudentInfo studentInfo = new StudentInfo(student.getId(), student.getFirstName() + " " + student.getLastName(), school.getId(), school.getSchoolAddress(), null, null, student.getCourses());
             return new StudentResponse<>(true, "Student created", studentInfo);
         } catch (Exception e) {
-            return new ApiErrorResponse<>(false, e.getMessage());
+            return new ApiErrorResponse<>(e.getMessage());
         }
     }
 
     @GetMapping("/students")
-    public ApiResponse<List<StudentInfo>> getAll() {
+    public ApiResponse<List<StudentInfo>> get() {
         try {
             List<Student> students = iStudentRepository.findAll();
             List<StudentInfo> studentInfoList = new LinkedList<>();
             for (Student i : students) {
                 AnnualReport annualReport = i.getAnnualReport();
-                StudentInfo info = new StudentInfo(i.getId(), i.getFirstName() + " " + i.getLastName(), i.getSchool().getId(), i.getSchool().getSchoolAddress(), annualReport != null ? annualReport.getStudentGpa() : null, annualReport != null ? annualReport.getStudentGrade() : null);
+                StudentInfo info = new StudentInfo(i.getId(), i.getFirstName() + " " + i.getLastName(), i.getSchool().getId(), i.getSchool().getSchoolAddress(), annualReport != null ? annualReport.getStudentGpa() : null, annualReport != null ? annualReport.getStudentGrade() : null, i.getCourses());
                 studentInfoList.add(info);
             }
             return new StudentResponse<>(true, "success", studentInfoList);
         } catch (Exception e) {
-            return new ApiErrorResponse<>(false, e.getMessage());
+            return new ApiErrorResponse<>(e.getMessage());
         }
     }
 
@@ -62,12 +63,12 @@ public class StudentController {
             List<StudentInfo> studentInfoList = new LinkedList<>();
             for (Student i : students) {
                 AnnualReport annualReport = i.getAnnualReport();
-                StudentInfo info = new StudentInfo(i.getId(), i.getFirstName() + " " + i.getLastName(), i.getSchool().getId(), i.getSchool().getSchoolAddress(), annualReport != null ? annualReport.getStudentGpa() : null, annualReport != null ? annualReport.getStudentGrade() : null);
+                StudentInfo info = new StudentInfo(i.getId(), i.getFirstName() + " " + i.getLastName(), i.getSchool().getId(), i.getSchool().getSchoolAddress(), annualReport != null ? annualReport.getStudentGpa() : null, annualReport != null ? annualReport.getStudentGrade() : null, i.getCourses());
                 studentInfoList.add(info);
             }
             return new StudentResponse<>(true, "success", studentInfoList);
         } catch (Exception e) {
-            return new ApiErrorResponse<>(false, e.getMessage());
+            return new ApiErrorResponse<>(e.getMessage());
         }
     }
 
@@ -75,15 +76,30 @@ public class StudentController {
     public ApiResponse<StudentInfo> update(@PathVariable("student_id") int studentId, @RequestParam("report_id") int reportId) {
         try {
             Student student = iStudentRepository.findById(studentId).get();
-            AnnualReport annualReport = iAnnualReportRepository.findById(reportId).get();
+            AnnualReport annualReport = new AnnualReport();
+            annualReport.setId(reportId);
             student.setAnnualReport(annualReport);
             iStudentRepository.save(student);
 
-            StudentInfo studentInfo = new StudentInfo(student.getId(), student.getFirstName() + " " + student.getLastName(), student.getSchool().getId(), student.getSchool().getSchoolAddress(), student.getAnnualReport().getStudentGpa(), student.getAnnualReport().getStudentGrade());
+            StudentInfo studentInfo = new StudentInfo(student.getId(), student.getFirstName() + " " + student.getLastName(), student.getSchool().getId(), student.getSchool().getSchoolAddress(), student.getAnnualReport().getStudentGpa(), student.getAnnualReport().getStudentGrade(), student.getCourses());
             return new StudentResponse<>(true, "success", studentInfo);
         } catch (Exception e) {
-            return new ApiErrorResponse<>(false, e.getMessage());
+            return new ApiErrorResponse<>(e.getMessage());
         }
+    }
+
+    @PutMapping("/student/courses/{student-id}")
+    public boolean update(@PathVariable("student-id") int studentId, @RequestBody List<Integer> coursesIds) {
+        Student student = iStudentRepository.findById(studentId).get();
+        List<Course> courses = new LinkedList<>();
+        coursesIds.forEach(courseId -> {
+            Course course = new Course();
+            course.setId(courseId);
+            courses.add(course);
+        });
+        student.setCourses(courses);
+        iStudentRepository.save(student);
+        return true;
     }
 
     @DeleteMapping("/students/{student_id}")

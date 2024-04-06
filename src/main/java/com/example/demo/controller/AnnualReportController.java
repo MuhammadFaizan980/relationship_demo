@@ -27,7 +27,7 @@ public class AnnualReportController {
             AnnualReportInfo info = new AnnualReportInfo(report.getId(), report.getStudentGpa(), report.getStudentGrade());
             return new AnnualReportResponse<>(true, "success", info);
         } catch (Exception e) {
-            return new ApiErrorResponse<>(false, e.getMessage());
+            return new ApiErrorResponse<>(e.getMessage());
         }
     }
 
@@ -42,7 +42,7 @@ public class AnnualReportController {
             }
             return new AnnualReportResponse<>(true, "Success", annualReportInfos);
         } catch (Exception e) {
-            return new ApiErrorResponse<>(false, e.getMessage());
+            return new ApiErrorResponse<>(e.getMessage());
         }
     }
 }

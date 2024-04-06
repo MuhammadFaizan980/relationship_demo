@@ -2,9 +2,14 @@ package com.example.demo.entities;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "students")
 public class Student {
+    @ManyToMany
+    @JoinTable(name = "student_courses", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
+    List<Course> courses;
     @Id
     @GeneratedValue
     private int id;
@@ -14,11 +19,9 @@ public class Student {
     private String lastName;
     @Column(name = "age")
     private int age;
-
     @ManyToOne
     @JoinColumn(name = "school_id")
     private School school;
-
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "annual_report_id")
     private AnnualReport annualReport;
@@ -72,5 +75,13 @@ public class Student {
 
     public void setAnnualReport(AnnualReport annualReport) {
         this.annualReport = annualReport;
+    }
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
     }
 }

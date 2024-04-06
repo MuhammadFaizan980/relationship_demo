@@ -25,7 +25,7 @@ public class SchoolController {
             SchoolInfo schoolInfo = new SchoolInfo(school.getId(), school.getSchoolAddress(), school.getSchoolPhoneNumber());
             return new SchoolResponse<>(true, "New school added", schoolInfo);
         } catch (Exception e) {
-            return new ApiErrorResponse<>(false, e.getMessage());
+            return new ApiErrorResponse<>(e.getMessage());
         }
     }
 
@@ -40,7 +40,7 @@ public class SchoolController {
             });
             return new SchoolResponse<List<SchoolInfo>>(true, "Success", schoolsInfoList);
         } catch (Exception e) {
-            return new ApiErrorResponse<>(false, e.getMessage());
+            return new ApiErrorResponse<>(e.getMessage());
         }
     }
 
