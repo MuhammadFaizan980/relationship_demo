@@ -4,11 +4,16 @@ import com.example.demo.dtos.school.SchoolInfo;
 import com.example.demo.dtos.school.SchoolRequest;
 import com.example.demo.dtos.school.SchoolResponse;
 import com.example.demo.entities.School;
+import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
 
+@Service
 public class SchoolMapper {
+    public SchoolResponse<SchoolInfo> toSchoolResponse(SchoolInfo schoolInfo) {
+        return new SchoolResponse<>(true, "Success", schoolInfo);
+    }
 
     public SchoolInfo toSchoolInfo(School school) {
         return new SchoolInfo(school.getId(), school.getSchoolAddress(), school.getSchoolPhoneNumber());

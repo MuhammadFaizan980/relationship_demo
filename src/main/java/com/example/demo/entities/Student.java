@@ -7,9 +7,6 @@ import java.util.List;
 @Entity
 @Table(name = "students")
 public class Student {
-    @ManyToMany
-    @JoinTable(name = "student_courses", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
-    List<Course> courses;
     @Id
     @GeneratedValue
     private int id;
@@ -19,6 +16,9 @@ public class Student {
     private String lastName;
     @Column(name = "age")
     private int age;
+    @ManyToMany
+    @JoinTable(name = "student_courses", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
+    List<Course> courses;
     @ManyToOne
     @JoinColumn(name = "school_id")
     private School school;

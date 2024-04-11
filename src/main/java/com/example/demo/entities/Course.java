@@ -8,14 +8,14 @@ import java.util.List;
 @Entity
 @Table(name = "courses")
 public class Course {
-    @ManyToMany(mappedBy = "courses")
-    @JsonIgnoreProperties("courses")
-    List<Student> students;
     @Id
     @GeneratedValue
     private int id;
     @Column(name = "title")
     private String courseTitle;
+    @ManyToMany(mappedBy = "courses")
+    @JsonIgnoreProperties("courses")
+    List<Student> students;
 
     public Course() {
     }

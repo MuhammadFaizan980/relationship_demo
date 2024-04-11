@@ -23,7 +23,7 @@ public class SchoolService {
     public ApiResponse<SchoolInfo> saveSchool(SchoolRequest schoolRequest) {
         try {
             School school = iSchoolRepository.save(schoolMapper.toSchool(schoolRequest));
-            return new SchoolResponse<>(true, "success", schoolMapper.toSchoolInfo(school));
+            return schoolMapper.toSchoolResponse(schoolMapper.toSchoolInfo(school));
         } catch (Exception e) {
             return new ApiErrorResponse<>(e.getMessage());
         }
@@ -38,8 +38,13 @@ public class SchoolService {
         }
     }
 
-    public boolean deleteSchool(int schoolId) {
-        iSchoolRepository.deleteById(schoolId);
-        return true;
+    public ApiResponse<SchoolInfo> deleteSchool(int schoolId) {
+        try {
+            iSchoolRepository.deleteById(schoolId);
+
+            return new SchoolResponse<>(true, "School deleted successfully", null);
+        } catch (Exception e) {
+            return new ApiErrorResponse<>(e.getMessage());
+        }
     }
 }

@@ -25,7 +25,7 @@ public class SchoolController {
     }
 
     @DeleteMapping("/schools/{school_id}")
-    public boolean delete(@PathVariable("school_id") int schoolId) {
+    public ApiResponse<SchoolInfo> delete(@PathVariable("school_id") int schoolId) {
         return schoolService.deleteSchool(schoolId);
     }
 }

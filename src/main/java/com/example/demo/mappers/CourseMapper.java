@@ -39,4 +39,14 @@ public class CourseMapper {
     public CourseInfo toCourseInfo(Course course) {
         return new CourseInfo(course.getId(), course.getCourseTitle(), course.getStudents());
     }
+
+    public List<Course> toCoursesListFromCoursesIdsList(List<Integer> coursesIds) {
+        List<Course> courses = new LinkedList<>();
+        coursesIds.forEach(courseId -> {
+            Course course = new Course();
+            course.setId(courseId);
+            courses.add(course);
+        });
+        return courses;
+    }
 }
